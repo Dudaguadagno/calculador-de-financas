@@ -4,15 +4,16 @@ class Mes {
         if (nome === "") throw new Error ("Mês Inválido: O mês é obrigatório");
         this.nome = nome;
         this.saldoInicial = saldoInicial;
-        this.totalizador = { saldo: 0, saldoInicial, juros: 0, rendimentos: 0, receitas: 0, despesas: 0, distribuicaoDeDespesas: [] };
+        this.totalizador = { saldo: 0, juros: 0, rendimentos: 0, receitas: 0, despesas: 0, distribuicaoDeDespesas: [] };
         this.lancamentos = [];
     }
     adicionarLancamento (lancamento) {
         this.lancamentos.push(lancamento);
 }
 
-    calcularSaldo () {                
-        this.totalizador.saldo = this.saldoInicial
+    calcularSaldo () {     
+        this.totalizador = { saldo: 0, juros: 0, rendimentos: 0, receitas: 0, despesas: 0, distribuicaoDeDespesas: [] };       
+        this.totalizador.saldo = this.saldoInicial;
         this.apurarReceitas ();
         this.apurarDespesas ();            
         this.distribuirDespesas ();
@@ -23,8 +24,8 @@ class Mes {
     apurarReceitas (){
         for (const lancamento of this.lancamentos) {
             if (lancamento.tipo === "receita"){                    
-                this.totalizador.saldo += lancamento.valor
-                this.totalizador.receitas += lancamento.valor
+                this.totalizador.saldo += lancamento.valor;
+                this.totalizador.receitas += lancamento.valor;
             }
         }
     }
@@ -32,8 +33,8 @@ class Mes {
     apurarDespesas () {
         for (const lancamento of this.lancamentos) {
             if (lancamento.tipo === "despesa") {
-                this.totalizador.saldo -= lancamento.valor
-                this.totalizador.despesas += lancamento.valor
+                this.totalizador.saldo -= lancamento.valor;
+                this.totalizador.despesas += lancamento.valor;
             }
         } 
     }
@@ -42,8 +43,8 @@ class Mes {
         const distribuicaoDeDespesas = []    
         for (const lancamento of this.lancamentos) {
             if (lancamento.tipo === "despesa") {
-                const percentual = arredondar((lancamento.valor/this.totalizador.despesas)*100)
-                distribuicaoDeDespesas.push({ categoria: lancamento.categoria, percentual })
+                const percentual = arredondar((lancamento.valor/this.totalizador.despesas)*100);
+                distribuicaoDeDespesas.push({ categoria: lancamento.categoria, percentual });
             }
                 
         }  
@@ -52,25 +53,25 @@ class Mes {
    
     apurarJuros () {         
         if (this.totalizador.saldo < 0) {
-            this.totalizador.juros = this.calcularJuros(this.totalizador.saldo) 
-            this.totalizador.saldo = arredondar(this.totalizador.saldo + this.totalizador.juros) 
+            this.totalizador.juros = this.calcularJuros(this.totalizador.saldo); 
+            this.totalizador.saldo = arredondar(this.totalizador.saldo + this.totalizador.juros); 
         }        
     } 
       
     calcularJuros (valor) {
-        const juros = arredondar(valor * 0.1)
+        const juros = arredondar(valor * 0.1);
         return juros
     }    
   
     apurarRendimentos () {      
         if (this.totalizador.saldo > 0) {
-            this.totalizador.rendimentos = this.calcularRendimentos(this.totalizador.saldo)
-            this.totalizador.saldo = arredondar(this.totalizador.saldo + this.totalizador.rendimentos)
+            this.totalizador.rendimentos = this.calcularRendimentos(this.totalizador.saldo);
+            this.totalizador.saldo = arredondar(this.totalizador.saldo + this.totalizador.rendimentos);
         }
     }
     
     calcularRendimentos (valor){
-        const rendimentos = arredondar(valor * 0.005)
+        const rendimentos = arredondar(valor * 0.005);
          return rendimentos
     } 
 }
